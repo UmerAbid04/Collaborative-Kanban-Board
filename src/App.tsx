@@ -1,17 +1,10 @@
-import { useBoard } from "./context/BoardContext";
+import Board from "./components/Board";
 
 function App() {
-  const { state } = useBoard();
-
   return (
     <div>
-      <h1>Kanban Board</h1>
-
-      {state.columns.map((column: any) => (
-        <div key={column.id}>
-          <h2>{column.title}</h2>
-        </div>
-      ))}
+      <h1>Collaborative Kanban Board</h1>
+      <Board />
     </div>
   );
 }

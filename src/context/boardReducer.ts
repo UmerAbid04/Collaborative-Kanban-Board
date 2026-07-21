@@ -2,7 +2,7 @@ import type { BoardState } from "../types/board";
 
 export function boardReducer(
   state: BoardState,
-  action: any
+  action: { type: string; payload?: unknown }
 ): BoardState {
   switch (action.type) {
     default:
