@@ -6,10 +6,8 @@ import type { BoardState } from "../types/board";
 import { boardReducer } from "./boardReducer";
 import { initialBoard } from "../data/initialBoard";
 
-type BoardAction = {
-  type: string;
-  payload?: unknown;
-};
+import type { BoardAction } from "./boardReducer";
+
 
 interface BoardContextType {
   state: BoardState;

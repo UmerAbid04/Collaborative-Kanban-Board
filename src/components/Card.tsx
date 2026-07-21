@@ -11,13 +11,19 @@ function Card({ card }: CardProps) {
 
       <p>{card.description}</p>
 
-      <p>Priority: {card.priority}</p>
+      <p>
+        <strong>Priority:</strong> {card.priority}
+      </p>
 
-      <div>
-        {card.labels.map((label) => (
-          <span key={label}>{label}</span>
-        ))}
-      </div>
+      {card.labels.length > 0 && (
+        <div className="labels">
+          {card.labels.map((label) => (
+            <span key={label} className="label">
+              {label}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
