@@ -16,13 +16,14 @@ function SearchBar({ onSearch }: SearchBarProps) {
   }, [text, onSearch]);
 
   return (
-    <input
-      type="text"
-      placeholder="Search cards..."
-      value={text}
-      onChange={(e) => setText(e.target.value)}
-    />
-  );
+  <input
+    className="search-bar"
+    type="text"
+    placeholder="Search cards..."
+    value={text}
+    onChange={(e) => setText(e.target.value)}
+  />
+);
 }
 
 export default SearchBar;
