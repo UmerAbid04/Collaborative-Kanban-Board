@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useBoard } from "../context/BoardContext";
 import type { Card as CardType } from "../types/board";
 
+
 interface CardProps {
   card: CardType;
   columnId: string;
@@ -37,7 +38,31 @@ function Card({ card, columnId }: CardProps) {
 
     setIsEditing(false);
   }
+  function handleDragStart(event: React.DragEvent<HTMLDivElement>) {
+  event.dataTransfer.setData("cardId", card.id);
+  event.dataTransfer.setData("columnId", columnId);
+}
 
+function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+  event.preventDefault();
+
+  const cardId = event.dataTransfer.getData("cardId");
+  const fromColumnId = event.dataTransfer.getData("columnId");
+
+  dispatch({
+    type: "MOVE_CARD",
+    payload: {
+      fromColumnId,
+      toColumnId: columnId,
+      cardId,
+      targetCardId: card.id,
+    },
+  });
+}
+
+function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+  event.preventDefault();
+}
   function deleteCard() {
     if (!window.confirm("Delete this card?")) return;
 
@@ -51,7 +76,13 @@ function Card({ card, columnId }: CardProps) {
   }
 
  return (
-  <div className="card">
+  <div
+  className="card"
+  draggable
+  onDragStart={handleDragStart}
+  onDrop={handleDrop}
+  onDragOver={handleDragOver}
+>
     {isEditing ? (
       <>
         <input

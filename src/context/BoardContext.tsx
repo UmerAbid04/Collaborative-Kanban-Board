@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useEffect } from "react";
 import type { ReactNode, Dispatch } from "react";
 
 import type { BoardState } from "../types/board";
@@ -15,9 +15,28 @@ interface BoardContextType {
 }
 
 const BoardContext = createContext<BoardContextType | null>(null);
+function loadBoard() {
+  const savedBoard = localStorage.getItem("kanban-board");
+
+  if (savedBoard) {
+    return JSON.parse(savedBoard);
+  }
+
+  return initialBoard;
+}
 
 export function BoardProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(boardReducer, initialBoard);
+  const [state, dispatch] = useReducer(
+  boardReducer,
+  undefined,
+  loadBoard
+);
+  useEffect(() => {
+  localStorage.setItem(
+    "kanban-board",
+    JSON.stringify(state)
+  );
+}, [state]);
 
   return (
     <BoardContext.Provider value={{ state, dispatch }}>

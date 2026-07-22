@@ -16,20 +16,20 @@ function Column({ column }: ColumnProps) {
   const [title, setTitle] = useState(column.title);
 
   function saveTitle() {
-    const newTitle = title.trim();
+  const newTitle = title.trim();
 
-    if (!newTitle) return;
+  if (!newTitle) return;
 
-    dispatch({
-      type: "RENAME_COLUMN",
-      payload: {
-        id: column.id,
-        title: newTitle,
-      },
-    });
+  dispatch({
+    type: "RENAME_COLUMN",
+    payload: {
+      id: column.id,
+      title: newTitle,
+    },
+  });
 
-    setIsEditing(false);
-  }
+  setIsEditing(false);
+}
 
   function deleteColumn() {
   const confirmed = window.confirm(
@@ -45,9 +45,33 @@ function Column({ column }: ColumnProps) {
     },
   });
 }
+function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+  event.preventDefault();
 
+  const cardId = event.dataTransfer.getData("cardId");
+  const fromColumnId = event.dataTransfer.getData("columnId");
+
+  if (fromColumnId === column.id) return;
+
+  dispatch({
+    type: "MOVE_CARD",
+    payload: {
+      fromColumnId,
+      toColumnId: column.id,
+      cardId,
+      targetCardId: null,
+    },
+  });
+}
+function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+  event.preventDefault();
+}
   return (
-    <div className="column">
+    <div
+  className="column"
+  onDrop={handleDrop}
+  onDragOver={handleDragOver}
+>
       {isEditing ? (
         <>
           <input
