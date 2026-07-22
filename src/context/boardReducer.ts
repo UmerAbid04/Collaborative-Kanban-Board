@@ -24,6 +24,20 @@ export type BoardAction =
       columnId: string;
       card: Card;
     };
+  }
+  | {
+    type: "UPDATE_CARD";
+    payload: {
+      columnId: string;
+      card: Card;
+    };
+  }
+| {
+    type: "DELETE_CARD";
+    payload: {
+      columnId: string;
+      cardId: string;
+    };
   };
 
 export function boardReducer(
@@ -60,6 +74,36 @@ export function boardReducer(
         ? {
             ...column,
             cards: [...column.cards, action.payload.card],
+          }
+        : column
+    ),
+  };
+  case "UPDATE_CARD":
+  return {
+    ...state,
+    columns: state.columns.map((column) =>
+      column.id === action.payload.columnId
+        ? {
+            ...column,
+            cards: column.cards.map((card) =>
+              card.id === action.payload.card.id
+                ? action.payload.card
+                : card
+            ),
+          }
+        : column
+    ),
+  };
+  case "DELETE_CARD":
+  return {
+    ...state,
+    columns: state.columns.map((column) =>
+      column.id === action.payload.columnId
+        ? {
+            ...column,
+            cards: column.cards.filter(
+              (card) => card.id !== action.payload.cardId
+            ),
           }
         : column
     ),

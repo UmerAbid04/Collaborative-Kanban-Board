@@ -76,7 +76,11 @@ function Column({ column }: ColumnProps) {
       )}
       <AddCard columnId={column.id} />
       {column.cards.map((card) => (
-        <Card key={card.id} card={card} />
+       <Card
+  key={card.id}
+  card={card}
+  columnId={column.id}
+/>
       ))}
     </div>
   );
