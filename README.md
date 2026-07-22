@@ -4,7 +4,7 @@ A modern Kanban board application built with React and TypeScript. The applicati
 
 ## Live Demo
 
-(Add Vercel deployment link here)
+https://collaborative-kanban-board-nine.vercel.app/
 
 ---
 
