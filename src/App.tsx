@@ -3,11 +3,11 @@ import Board from "./components/Board";
 import SearchBar from "./components/SearchBar";
 import FilterBar from "./components/FilterBar";
 import { useBoard } from "./context/useBoard";
-import { useToast } from "./context/ToastContext";
+
 
 function App() {
   const { state } = useBoard();
-  const { showToast } = useToast();
+
 
   const [searchText, setSearchText] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
