@@ -1,15 +1,14 @@
-export function fakeRequest(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const delay = Math.floor(Math.random() * 500) + 300;
+export async function fakeRequest() {
+  const delay =
+    Math.floor(Math.random() * 500) + 300;
 
-    setTimeout(() => {
-      const failed = Math.random() < 0.15;
+  await new Promise((resolve) =>
+    setTimeout(resolve, delay)
+  );
 
-      if (failed) {
-        reject(new Error("Request failed"));
-      } else {
-        resolve();
-      }
-    }, delay);
-  });
+  const failed = Math.random() < 0.15;
+
+  if (failed) {
+    throw new Error("Request failed");
+  }
 }

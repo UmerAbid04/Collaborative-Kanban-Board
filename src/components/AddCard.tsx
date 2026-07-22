@@ -1,37 +1,37 @@
 import { useState } from "react";
-import { useBoard } from "../context/BoardContext";
+import { useBoard } from "../context/useBoard";
 
 interface AddCardProps {
   columnId: string;
 }
 
 function AddCard({ columnId }: AddCardProps) {
-  const { dispatch } = useBoard();
+  const { optimisticDispatch } = useBoard();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("low");
   const [labels, setLabels] = useState("");
 
-  function addCard() {
+  async function addCard() {
     if (!title.trim()) return;
 
-    dispatch({
-      type: "ADD_CARD",
-      payload: {
-        columnId,
-        card: {
-          id: crypto.randomUUID(),
-          title: title.trim(),
-          description: description.trim(),
-          priority,
-          labels: labels
-            .split(",")
-            .map((label) => label.trim())
-            .filter((label) => label !== ""),
-        },
-      },
-    });
+    await optimisticDispatch({
+  type: "ADD_CARD",
+  payload: {
+    columnId,
+    card: {
+      id: crypto.randomUUID(),
+      title,
+      description,
+      priority,
+      labels: labels
+        .split(",")
+        .map((label) => label.trim())
+        .filter(Boolean),
+    },
+  },
+});
 
     setTitle("");
     setDescription("");

@@ -1,13 +1,20 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.tsx";
-import { BoardProvider } from "./context/BoardContext.tsx";
 
-createRoot(document.getElementById("root")!).render(
+import App from "./App";
+import { BoardProvider } from "./context/BoardContext";
+import { ToastProvider } from "./context/ToastContext";
+
+
+createRoot(
+  document.getElementById("root")!
+).render(
   <StrictMode>
-    <BoardProvider>
-      <App />
-    </BoardProvider>
+    <ToastProvider>
+      <BoardProvider>
+        <App />
+      </BoardProvider>
+    </ToastProvider>
   </StrictMode>
 );

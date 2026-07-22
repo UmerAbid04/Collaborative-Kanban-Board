@@ -1,4 +1,4 @@
-import { useBoard } from "../context/BoardContext";
+import { useBoard } from "../context/useBoard";
 import AddColumn from "./AddColumn";
 import Column from "./Column";
 

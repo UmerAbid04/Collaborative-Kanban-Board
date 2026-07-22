@@ -1,12 +1,15 @@
-import { useBoard } from "../context/BoardContext";
+import { useBoard } from "../context/useBoard";
 import { fakeRequest } from "../api/mockApi";
 import type { BoardAction } from "../context/boardReducer";
+import type { BoardState } from "../types/board";
 
-export function useOptimisticDispatch() {
+export function useOptimisticAction(
+  setToast: (message: string) => void
+) {
   const { state, dispatch } = useBoard();
 
-  async function optimisticDispatch(action: BoardAction) {
-    const previousState = state;
+  async function execute(action: BoardAction) {
+    const previousState: BoardState = structuredClone(state);
 
     dispatch(action);
 
@@ -18,9 +21,9 @@ export function useOptimisticDispatch() {
         payload: previousState,
       });
 
-      alert("Request failed. Changes were reverted.");
+      setToast("Request failed. Changes reverted.");
     }
   }
 
-  return optimisticDispatch;
+  return execute;
 }

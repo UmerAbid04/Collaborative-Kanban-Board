@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBoard } from "../context/BoardContext";
+import { useBoard } from "../context/useBoard";
 
 function AddColumn() {
   const { dispatch } = useBoard();

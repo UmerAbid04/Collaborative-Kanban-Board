@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBoard } from "../context/BoardContext";
+import { useBoard } from "../context/useBoard";
 import type { Card as CardType } from "../types/board";
 
 
@@ -9,7 +9,7 @@ interface CardProps {
 }
 
 function Card({ card, columnId }: CardProps) {
-  const { dispatch } = useBoard();
+  const { optimisticDispatch } = useBoard();
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -18,38 +18,46 @@ function Card({ card, columnId }: CardProps) {
   const [priority, setPriority] = useState(card.priority);
   const [labels, setLabels] = useState(card.labels.join(", "));
 
-  function saveCard() {
-    dispatch({
-      type: "UPDATE_CARD",
-      payload: {
-        columnId,
-        card: {
-          ...card,
-          title,
-          description,
-          priority,
-          labels: labels
-            .split(",")
-            .map((label) => label.trim())
-            .filter(Boolean),
-        },
+  async function saveCard() {
+  await optimisticDispatch({
+    type: "UPDATE_CARD",
+    payload: {
+      columnId,
+      card: {
+        ...card,
+        title,
+        description,
+        priority,
+        labels: labels
+          .split(",")
+          .map((label) => label.trim())
+          .filter(Boolean),
       },
-    });
+    },
+  });
 
-    setIsEditing(false);
-  }
+  setIsEditing(false);
+}
   function handleDragStart(event: React.DragEvent<HTMLDivElement>) {
   event.dataTransfer.setData("cardId", card.id);
   event.dataTransfer.setData("columnId", columnId);
 }
 
-function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+async function handleDrop(
+  event: React.DragEvent<HTMLDivElement>
+) {
   event.preventDefault();
 
   const cardId = event.dataTransfer.getData("cardId");
   const fromColumnId = event.dataTransfer.getData("columnId");
 
-  dispatch({
+  if (!cardId || !fromColumnId) return;
+
+  if (fromColumnId === columnId && cardId === card.id) {
+    return;
+  }
+
+  await optimisticDispatch({
     type: "MOVE_CARD",
     payload: {
       fromColumnId,
@@ -63,17 +71,17 @@ function handleDrop(event: React.DragEvent<HTMLDivElement>) {
 function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
   event.preventDefault();
 }
-  function deleteCard() {
-    if (!window.confirm("Delete this card?")) return;
+  async function deleteCard() {
+  if (!window.confirm("Delete this card?")) return;
 
-    dispatch({
-      type: "DELETE_CARD",
-      payload: {
-        columnId,
-        cardId: card.id,
-      },
-    });
-  }
+  await optimisticDispatch({
+    type: "DELETE_CARD",
+    payload: {
+      columnId,
+      cardId: card.id,
+    },
+  });
+}
 
  return (
   <div
